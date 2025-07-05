@@ -128,23 +128,32 @@ BEAUTIFUL_QUOTES = [
 ]
 
 # Function to fix image orientation
+from PIL import ExifTags
+
 def fix_image_orientation(image):
     """
-    Fix image orientation by removing EXIF orientation data
-    and ensuring the image is displayed straight
+    Auto-rotate image using EXIF data so that portrait images appear correctly.
     """
     try:
-        # Remove EXIF data that might cause rotation
-        if hasattr(image, '_getexif'):
-            # Create a new image without EXIF data
-            image_without_exif = Image.new(image.mode, image.size)
-            image_without_exif.putdata(list(image.getdata()))
-            return image_without_exif
-        else:
-            return image
-    except Exception:
-        # If there's any error, return the original image
-        return image
+        exif = image._getexif()
+        if exif is not None:
+            orientation_key = None
+            for k, v in ExifTags.TAGS.items():
+                if v == 'Orientation':
+                    orientation_key = k
+                    break
+            if orientation_key and orientation_key in exif:
+                orientation = exif[orientation_key]
+                if orientation == 3:
+                    image = image.rotate(180, expand=True)
+                elif orientation == 6:
+                    image = image.rotate(270, expand=True)
+                elif orientation == 8:
+                    image = image.rotate(90, expand=True)
+    except Exception as e:
+        pass  # Silently ignore if any issues occur
+    return image
+
 
 # Initialize session state
 if 'slideshow_active' not in st.session_state:
@@ -157,7 +166,7 @@ if 'uploaded_music' not in st.session_state:
     st.session_state.uploaded_music = None
 
 # Header
-st.markdown('<h1 class="main-title">🎉 Birthday Slideshow Creator 🎉</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-title">🎉 A SUPRISE TO U  🎉</h1>', unsafe_allow_html=True)
 
 # Step 1: Upload Pictures
 st.markdown('<div class="upload-section">', unsafe_allow_html=True)
