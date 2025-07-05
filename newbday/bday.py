@@ -2,6 +2,7 @@ import streamlit as st
 import base64
 from PIL import Image
 import time
+import os
 
 st.set_page_config(page_title="Pavani's Birthday Gift 🎁", layout="centered")
 
@@ -19,19 +20,22 @@ st.markdown(
 
 # Background Music
 def autoplay_audio(file_path: str):
-    with open(file_path, "rb") as f:
-        data = f.read()
-    b64 = base64.b64encode(data).decode()
-    md = f"""
-    <audio autoplay loop>
-    <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-    </audio>
-    """
-    st.markdown(md, unsafe_allow_html=True)
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as f:
+            data = f.read()
+        b64 = base64.b64encode(data).decode()
+        md = f"""
+        <audio autoplay loop>
+        <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+        </audio>
+        """
+        st.markdown(md, unsafe_allow_html=True)
+    else:
+        st.warning(f"🎵 Music file not found: {file_path}")
 
-autoplay_audio("music.mp3")  # Change file name if needed
+autoplay_audio("bdaysong.mp3")
 
-# Slideshow of Images
+# Image Slideshow
 image_paths = [
     "IMG-20250308-WA0040.jpg",
     "IMG-20250313-WA0031.jpg",
@@ -42,9 +46,12 @@ image_paths = [
 ]
 
 for path in image_paths:
-    img = Image.open(path)
-    st.image(img, use_column_width=True)
-    time.sleep(1.5)
+    if os.path.exists(path):
+        img = Image.open(path)
+        st.image(img, use_column_width=True)
+        time.sleep(1.5)
+    else:
+        st.warning(f"⚠️ Image not found: {path}")
 
 # Final Message
 st.markdown(
