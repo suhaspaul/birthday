@@ -77,15 +77,29 @@ QUOTES = [
 ]
 
 # -- Orientation fix
+from PIL import ExifTags
+
 def fix_orientation(img):
     try:
-        if hasattr(img, '_getexif'):
-            img_no_exif = Image.new(img.mode, img.size)
-            img_no_exif.putdata(list(img.getdata()))
-            return img_no_exif
-        return img
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+
+        exif = img._getexif()
+
+        if exif is not None:
+            orientation_value = exif.get(orientation, None)
+
+            if orientation_value == 3:
+                img = img.rotate(180, expand=True)
+            elif orientation_value == 6:
+                img = img.rotate(270, expand=True)
+            elif orientation_value == 8:
+                img = img.rotate(90, expand=True)
     except Exception:
-        return img
+        pass
+    return img
+
 
 # -- Session states
 if 'slideshow_active' not in st.session_state:
