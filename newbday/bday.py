@@ -70,14 +70,28 @@ def autoplay_audio(file_path: str):
 autoplay_audio("music.mp3")
 
 # Image slideshow with session state
+# Option 1: Put images in same folder as this script
+# Option 2: Create an 'images' folder and update paths below
+# Option 3: Use full file paths
+
 image_paths = [
-    "IMG-20250308-WA0040.jpg",
-    "IMG-20250313-WA0031.jpg", 
-    "IMG_20250323_142607263.jpg",
-    "IMG_20250323_142522740.jpg",
-    "IMG_20250323_143639041_HDR.jpg",
-    "IMG-20250324-WA0088.jpg"
+    "images/IMG-20250308-WA0040.jpg",  # Update these paths
+    "images/IMG-20250313-WA0031.jpg", 
+    "images/IMG_20250323_142607263.jpg",
+    "images/IMG_20250323_142522740.jpg",
+    "images/IMG_20250323_143639041_HDR.jpg",
+    "images/IMG-20250324-WA0088.jpg"
 ]
+
+# Alternative: Let user upload images directly
+uploaded_files = st.file_uploader(
+    "Or upload images here if files are missing:", 
+    accept_multiple_files=True,
+    type=['jpg', 'jpeg', 'png']
+)
+
+if uploaded_files:
+    image_paths = uploaded_files
 
 # Initialize session state for slideshow
 if 'current_image' not in st.session_state:
@@ -105,22 +119,32 @@ with col4:
         st.session_state.current_image = 0
 
 # Display current image
-try:
-    current_path = image_paths[st.session_state.current_image]
-    img = Image.open(current_path)
-    
-    # Display image with container styling
-    st.markdown('<div class="slideshow-container">', unsafe_allow_html=True)
-    st.image(img, use_column_width=True, caption=f"Memory {st.session_state.current_image + 1} of {len(image_paths)} 📸")
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Progress bar
-    progress = (st.session_state.current_image + 1) / len(image_paths)
-    st.progress(progress)
-    
-except FileNotFoundError:
-    st.error(f"Image not found: {current_path}")
-    st.info("Make sure all image files are in the same folder as this script!")
+if image_paths:
+    try:
+        current_path = image_paths[st.session_state.current_image]
+        
+        # Handle both file paths and uploaded files
+        if isinstance(current_path, str):
+            img = Image.open(current_path)
+        else:
+            img = Image.open(current_path)
+        
+        # Display image with container styling
+        st.markdown('<div class="slideshow-container">', unsafe_allow_html=True)
+        st.image(img, use_column_width=True, caption=f"Memory {st.session_state.current_image + 1} of {len(image_paths)} 📸")
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Progress bar
+        progress = (st.session_state.current_image + 1) / len(image_paths)
+        st.progress(progress)
+        
+    except FileNotFoundError:
+        st.error(f"Image not found: {current_path}")
+        st.info("📁 **How to fix this:**\n1. Create an 'images' folder next to your Python script\n2. Put all photos in that folder\n3. OR use the file uploader above")
+    except Exception as e:
+        st.error(f"Error loading image: {e}")
+else:
+    st.info("No images found. Please upload some photos using the file uploader above!")
 
 # Auto-advance functionality
 if st.session_state.auto_advance:
@@ -129,18 +153,26 @@ if st.session_state.auto_advance:
     st.rerun()
 
 # Display all images as thumbnails
-st.markdown("### 📷 All Memories")
-cols = st.columns(3)
-for i, path in enumerate(image_paths):
-    try:
-        img = Image.open(path)
-        with cols[i % 3]:
-            if st.button(f"View Image {i+1}", key=f"thumb_{i}"):
-                st.session_state.current_image = i
-            st.image(img, use_column_width=True)
-    except FileNotFoundError:
-        with cols[i % 3]:
-            st.error(f"Missing: {path}")
+if image_paths:
+    st.markdown("### 📷 All Memories")
+    cols = st.columns(3)
+    for i, path in enumerate(image_paths):
+        try:
+            if isinstance(path, str):
+                img = Image.open(path)
+            else:
+                img = Image.open(path)
+            
+            with cols[i % 3]:
+                if st.button(f"View Image {i+1}", key=f"thumb_{i}"):
+                    st.session_state.current_image = i
+                st.image(img, use_column_width=True)
+        except FileNotFoundError:
+            with cols[i % 3]:
+                st.error(f"Missing: {path}")
+        except Exception as e:
+            with cols[i % 3]:
+                st.error(f"Error: {e}")
 
 # Final Message
 st.markdown("""
