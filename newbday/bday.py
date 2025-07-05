@@ -127,6 +127,25 @@ BEAUTIFUL_QUOTES = [
     "🎁 You are our greatest blessing"
 ]
 
+# Function to fix image orientation
+def fix_image_orientation(image):
+    """
+    Fix image orientation by removing EXIF orientation data
+    and ensuring the image is displayed straight
+    """
+    try:
+        # Remove EXIF data that might cause rotation
+        if hasattr(image, '_getexif'):
+            # Create a new image without EXIF data
+            image_without_exif = Image.new(image.mode, image.size)
+            image_without_exif.putdata(list(image.getdata()))
+            return image_without_exif
+        else:
+            return image
+    except Exception:
+        # If there's any error, return the original image
+        return image
+
 # Initialize session state
 if 'slideshow_active' not in st.session_state:
     st.session_state.slideshow_active = False
@@ -206,7 +225,10 @@ if st.session_state.uploaded_files and st.session_state.uploaded_music:
             current_file = st.session_state.uploaded_files[st.session_state.current_image]
             img = Image.open(current_file)
             
-            # Display image
+            # Fix image orientation to prevent rotation
+            img = fix_image_orientation(img)
+            
+            # Display image straight without any rotation
             st.image(img, use_container_width=True, caption=f"Photo {st.session_state.current_image + 1} of {len(st.session_state.uploaded_files)}")
             
             # Display beautiful quote for current image
@@ -234,13 +256,14 @@ if st.session_state.uploaded_files and st.session_state.uploaded_music:
             # Show final birthday message
             st.markdown(f"""
             <div class="final-message">
-                🎂 Happy Birthday to my cutest sweetest PAVANI 🎂<br><br>
+                🎂 Happy Birthday! 🎂<br><br>
                 💝 This beautiful slideshow was created especially for you<br>
                 with lots of love and affection! 💝<br><br>
-                🌟 A small Gift  to my DUMBU fellow 🌟<br><br>
+                🌟 You mean the world to us and we wanted to celebrate<br>
+                this special day in a memorable way! 🌟<br><br>
                 💖 May your birthday be filled with joy, laughter,<br>
-                and all the happiness you deserve!  💖<br><br>
-                🎉 Here's to another amazing year ahead!, I hope our bond continues ..... 💝💖🎉
+                and all the happiness you deserve! 💖<br><br>
+                🎉 Here's to another amazing year ahead! 🎉
             </div>
             """, unsafe_allow_html=True)
             
