@@ -131,7 +131,7 @@ if image_paths:
         
         # Display image with container styling
         st.markdown('<div class="slideshow-container">', unsafe_allow_html=True)
-        st.image(img, use_column_width=True, caption=f"Memory {st.session_state.current_image + 1} of {len(image_paths)} 📸")
+        st.image(img, use_container_width=True, caption=f"Memory {st.session_state.current_image + 1} of {len(image_paths)} 📸")
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Progress bar
@@ -166,7 +166,7 @@ if image_paths:
             with cols[i % 3]:
                 if st.button(f"View Image {i+1}", key=f"thumb_{i}"):
                     st.session_state.current_image = i
-                st.image(img, use_column_width=True)
+                st.image(img, use_container_width=True)
         except FileNotFoundError:
             with cols[i % 3]:
                 st.error(f"Missing: {path}")
