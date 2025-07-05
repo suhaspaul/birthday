@@ -64,17 +64,18 @@ st.markdown("""
 
 # -- Quotes
 QUOTES = [
-    "💫 Every moment with you is a precious gift",
-    "🌟 Your smile lights up our world",
-    "✨ Life is more beautiful because you're in it",
-    "🎈 You bring joy to everyone around you",
-    "💝 Another year of wonderful memories with you",
-    "🌈 You make every day brighter and better",
-    "🎉 Celebrating the amazing person you are",
-    "💖 Your kindness touches every heart",
-    "🎂 May your special day be filled with love",
-    "🌺 You are loved more than words can say"
+    "💞 Friends like you are rare and precious 💫",
+    "🌟 Every memory with you is a beautiful chapter in my life 📖",
+    "💖 You’re not just a friend, you’re family 💝",
+    "🎈 Our bond is built on laughter, love, and endless talks 💬",
+    "🌸 I’m so lucky to have a friend like you in my life 🍀",
+    "💕 No distance, no time, no reason can break our bond 🔗",
+    "💫 True friendship isn't about being inseparable, it's about being connected by heart 🫶",
+    "💌 You're my favorite person to share my madness with 😜",
+    "🎉 Cheers to the memories we've made and the ones still to come 🥂",
+    "🫂 You’re my happy place when the world feels too heavy 💗"
 ]
+
 
 # -- Orientation fix
 from PIL import ExifTags
