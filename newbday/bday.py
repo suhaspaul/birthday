@@ -234,14 +234,13 @@ if st.session_state.uploaded_files and st.session_state.uploaded_music:
             # Show final birthday message
             st.markdown(f"""
             <div class="final-message">
-                🎂 Happy Birthday! 🎂<br><br>
+                🎂 Happy Birthday to my cutest sweetest PAVANI 🎂<br><br>
                 💝 This beautiful slideshow was created especially for you<br>
                 with lots of love and affection! 💝<br><br>
-                🌟 You mean the world to us and we wanted to celebrate<br>
-                this special day in a memorable way! 🌟<br><br>
+                🌟 A small Gift  to my DUMBU fellow 🌟<br><br>
                 💖 May your birthday be filled with joy, laughter,<br>
-                and all the happiness you deserve! 💖<br><br>
-                🎉 Here's to another amazing year ahead! 🎉
+                and all the happiness you deserve!  💖<br><br>
+                🎉 Here's to another amazing year ahead!, I hope our bond continues ..... 💝💖🎉
             </div>
             """, unsafe_allow_html=True)
             
